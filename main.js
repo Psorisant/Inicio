@@ -120,44 +120,40 @@ function vaciarCarrito() {
     mostrarNotificacion('Carrito vacío', '', true);
 }
 
-
-
 function mostrarNotificacion(nombreProducto, cantidad, esVaciado = false) {
-    const notificacion = document.getElementById('notificacion-carrito');
-    const mensajeNotificacion = document.getElementById('mensaje-notificacion');
-    const nombreProductoElem = document.getElementById('nombre-producto');
-    const cantidadProductoElem = document.getElementById('cantidad-producto');
-    const iconoCheck = document.querySelector('.icono-check');
+    let notificacion = document.getElementById('notificacion-carrito');
 
-    // Forzar el reinicio de la notificación antes de mostrar una nueva
-    notificacion.classList.remove('mostrar');
-    notificacion.style.display = "none"; // Ocultamos la notificación completamente
+    // Si la notificación ya existe en el DOM, la eliminamos para reiniciarla completamente
+    if (notificacion) {
+        notificacion.remove();
+    }
+
+    // Crear nueva notificación desde cero
+    notificacion = document.createElement("div");
+    notificacion.id = "notificacion-carrito";
+    notificacion.className = "notificacion-carrito mostrar";
+    notificacion.style.position = "fixed";
+    notificacion.style.bottom = "20px";
+    notificacion.style.right = "20px";
+    notificacion.style.background = esVaciado ? "#dc3545" : "#28a745";
+    notificacion.style.color = "#fff";
+    notificacion.style.padding = "10px 20px";
+    notificacion.style.borderRadius = "5px";
+    notificacion.style.boxShadow = "0px 4px 6px rgba(0,0,0,0.1)";
+    notificacion.style.zIndex = "9999";
+
+    const mensaje = document.createElement("p");
+    mensaje.style.margin = "0";
+    mensaje.style.fontWeight = "bold";
+    mensaje.innerHTML = esVaciado ? "Carrito vaciado correctamente" : `Producto agregado: ${nombreProducto} (Cantidad: ${cantidad})`;
+
+    notificacion.appendChild(mensaje);
+    document.body.appendChild(notificacion); // Agregamos al DOM
 
     setTimeout(() => {
-        if (esVaciado) {
-            mensajeNotificacion.innerHTML = "<strong>Carrito vaciado correctamente</strong>";
-            nombreProductoElem.textContent = "";
-            cantidadProductoElem.textContent = "";
-            notificacion.style.background = "#dc3545"; // Rojo para destacar el vaciado
-            iconoCheck.innerHTML = "❌"; 
-            iconoCheck.style.color = "#dc3545";
-        } else {
-            mensajeNotificacion.innerHTML = "<strong>Producto agregado</strong>";
-            nombreProductoElem.textContent = nombreProducto;
-            cantidadProductoElem.textContent = `Cantidad en carrito: ${cantidad}`;
-            notificacion.style.background = "#28a745"; // Verde para productos agregados
-            iconoCheck.innerHTML = "✔";
-            iconoCheck.style.color = "#28a745";
-        }
-
-        notificacion.style.display = "block"; // Volvemos a mostrarla
-        notificacion.classList.add('mostrar');
-
-        setTimeout(() => {
-            notificacion.classList.remove('mostrar');
-            notificacion.style.display = "none"; // Asegurar que desaparezca después de la animación
-        }, 2500);
-    }, 100); // Pequeña pausa para permitir que el DOM se actualice
+        notificacion.classList.remove("mostrar");
+        notificacion.remove(); // Eliminamos completamente la notificación tras 2.5 segundos
+    }, 2500);
 }
 
 
