@@ -106,23 +106,20 @@ function modificarCantidad(id, cambio) {
 function vaciarCarrito() {
     if (!confirm('¿Estás seguro de que deseas vaciar el carrito?')) return;
 
-    carrito = {};
-    actualizarCarrito();
+    carrito = {}; // Vacia el carrito
+    actualizarCarrito(); // Refresca la interfaz
     
-    // Mostrar notificación de que el carrito fue vaciado
-    mostrarNotificacion('Carrito vacío', '', true);
-
-    // Restablecer la notificación para futuras adiciones al carrito
+    // Forzar el cierre del carrito asegurando que el estado cambie
     setTimeout(() => {
-        const notificacion = document.getElementById('notificacion-carrito');
-        if (notificacion) {
-            notificacion.classList.remove('mostrar'); // Oculta la notificación después del vaciado
+        if (domElements.cartSidebar.classList.contains('active')) {
+            toggleCarrito(); // Cierra el carrito si sigue abierto
         }
-    }, 2500);
+    }, 300); 
 
-    // Cerrar el carrito antes de redirigir
-    toggleCarrito();
+    // Mostrar la notificación correctamente
+    mostrarNotificacion('Carrito vacío', '', true);
 }
+
 
 
 function mostrarNotificacion(nombreProducto, cantidad, esVaciado = false) {
@@ -132,29 +129,34 @@ function mostrarNotificacion(nombreProducto, cantidad, esVaciado = false) {
     const cantidadProductoElem = document.getElementById('cantidad-producto');
     const iconoCheck = document.querySelector('.icono-check');
 
-    if (esVaciado) {
-        mensajeNotificacion.innerHTML = "<strong>Carrito vaciado correctamente</strong>";
-        nombreProductoElem.textContent = "";
-        cantidadProductoElem.textContent = "";
-        notificacion.style.background = "#dc3545"; // Rojo para destacar el vaciado
-        iconoCheck.innerHTML = "❌"; // Cambia el ícono a una equis
-        iconoCheck.style.background = "white"; // Mantiene el diseño
-        iconoCheck.style.color = "#dc3545"; // Hace la equis roja
-    } else {
-        nombreProductoElem.textContent = nombreProducto;
-        cantidadProductoElem.textContent = `Cantidad en carrito: ${cantidad}`;
-        notificacion.style.background = "#28a745"; // Verde para productos agregados
-        iconoCheck.innerHTML = "✔"; // Devuelve el ícono a check
-        iconoCheck.style.background = "white";
-        iconoCheck.style.color = "#28a745";
-    }
-
-    notificacion.classList.add('mostrar');
+    // Resetear la notificación
+    notificacion.classList.remove('mostrar');
 
     setTimeout(() => {
-        notificacion.classList.remove('mostrar');
-    }, 2500);
+        if (esVaciado) {
+            mensajeNotificacion.innerHTML = "<strong>Carrito vaciado correctamente</strong>";
+            nombreProductoElem.textContent = "";
+            cantidadProductoElem.textContent = "";
+            notificacion.style.background = "#dc3545"; // Rojo para destacar el vaciado
+            iconoCheck.innerHTML = "❌"; 
+            iconoCheck.style.color = "#dc3545";
+        } else {
+            mensajeNotificacion.innerHTML = "<strong>Producto agregado</strong>";
+            nombreProductoElem.textContent = nombreProducto;
+            cantidadProductoElem.textContent = `Cantidad en carrito: ${cantidad}`;
+            notificacion.style.background = "#28a745"; // Verde para productos agregados
+            iconoCheck.innerHTML = "✔";
+            iconoCheck.style.color = "#28a745";
+        }
+
+        notificacion.classList.add('mostrar');
+
+        setTimeout(() => {
+            notificacion.classList.remove('mostrar');
+        }, 2500);
+    }, 50); // Pequeña pausa para asegurar que se oculta antes de volver a mostrarse
 }
+
 
 
 function cerrarNotificacion() {
