@@ -109,8 +109,16 @@ function vaciarCarrito() {
     carrito = {};
     actualizarCarrito();
     
-    // Mostrar notificación personalizada cuando el carrito se vacía
+    // Mostrar notificación de que el carrito fue vaciado
     mostrarNotificacion('Carrito vacío', '', true);
+
+    // Restablecer la notificación para futuras adiciones al carrito
+    setTimeout(() => {
+        const notificacion = document.getElementById('notificacion-carrito');
+        if (notificacion) {
+            notificacion.classList.remove('mostrar'); // Oculta la notificación después del vaciado
+        }
+    }, 2500);
 
     // Cerrar el carrito antes de redirigir
     toggleCarrito();
