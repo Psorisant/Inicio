@@ -129,8 +129,9 @@ function mostrarNotificacion(nombreProducto, cantidad, esVaciado = false) {
     const cantidadProductoElem = document.getElementById('cantidad-producto');
     const iconoCheck = document.querySelector('.icono-check');
 
-    // Resetear la notificación
+    // Forzar el reinicio de la notificación antes de mostrar una nueva
     notificacion.classList.remove('mostrar');
+    notificacion.style.display = "none"; // Ocultamos la notificación completamente
 
     setTimeout(() => {
         if (esVaciado) {
@@ -149,13 +150,16 @@ function mostrarNotificacion(nombreProducto, cantidad, esVaciado = false) {
             iconoCheck.style.color = "#28a745";
         }
 
+        notificacion.style.display = "block"; // Volvemos a mostrarla
         notificacion.classList.add('mostrar');
 
         setTimeout(() => {
             notificacion.classList.remove('mostrar');
+            notificacion.style.display = "none"; // Asegurar que desaparezca después de la animación
         }, 2500);
-    }, 50); // Pequeña pausa para asegurar que se oculta antes de volver a mostrarse
+    }, 100); // Pequeña pausa para permitir que el DOM se actualice
 }
+
 
 
 
